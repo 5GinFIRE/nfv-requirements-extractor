@@ -14,6 +14,9 @@ public class VNFExtractor {
     private static int BUFFER_SIZE = 4 * 1024;
 
     private File VNFDescriptorFile;
+    
+
+	private String descriptorYAMLfile;	
 
     public VNFExtractor(File VNFDescriptorFile) {
         this.VNFDescriptorFile = VNFDescriptorFile;
@@ -43,14 +46,36 @@ public class VNFExtractor {
                     }
 
                     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+                    
+                    this.descriptorYAMLfile = new String(file.toByteArray());
+                    VNFTopLevelContainer container = null;
+                    try {
+                    	container = mapper.readValue(file.toByteArray(), VNFTopLevelContainer.class);                   	
+                    	
+                    } catch( Exception e ) {
+            			e.printStackTrace();                    		
+                    }
+                    
 
-                    VNFTopLevelContainer container = mapper.readValue(file.toByteArray(), VNFTopLevelContainer.class);
+                	if (container != null) {
+                		return container.catalog.vnfDescriptors.get(0);
+                	} else {
+                		return null;
+                	}
 
-                    return container.catalog.vnfDescriptors.get(0);
                 }
             }
         }
 
         return null;
     }
+
+	public String getDescriptorYAMLfile() {
+		return descriptorYAMLfile;
+	}
+
+	public void setDescriptorYAMLfile(String descriptorYAMLfile) {
+		this.descriptorYAMLfile = descriptorYAMLfile;
+	}
+
 }
