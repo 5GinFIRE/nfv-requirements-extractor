@@ -35,10 +35,13 @@ public class VNFRequirements {
         StringBuilder stringBuilder = new StringBuilder();
         Formatter fmt = new Formatter(stringBuilder);
         fmt.format("<h3>%s</h3><br>", descriptor.name);
-        fmt.format("<b>%s: </b>%d<br>", "VM Count", this.vmCount);
-        fmt.format("<b>%s: </b>%d<br>", "vCPU Count", this.vcpuCount);
-        fmt.format("<b>%s: </b>%d MB<br>", "Memory", this.memoryMB);
-        fmt.format("<b>%s: </b>%d GB<br>", "Storage", this.storageGB);
+        fmt.format("<b>%s: </b>%s<br>", "Vendor", descriptor.vendor);
+        fmt.format("<b>%s: </b>%s<br>", "Version", descriptor.version);
+        fmt.format("<b>%s: </b>%s<br>", "Description", descriptor.description);
+        fmt.format("<b>%s: </b>%d<br>", "VM Count", vmCount);
+        fmt.format("<b>%s: </b>%d<br>", "vCPU Count", vcpuCount);
+        fmt.format("<b>%s: </b>%d MB<br>", "Memory", memoryMB);
+        fmt.format("<b>%s: </b>%d GB<br>", "Storage", storageGB);
 
         return stringBuilder.toString();
     }
