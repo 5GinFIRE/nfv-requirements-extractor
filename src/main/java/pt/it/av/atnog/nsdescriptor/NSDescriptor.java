@@ -45,6 +45,9 @@ public class NSDescriptor {
     @JsonIgnore
     public List<VLD> vldList;
 
+    @JsonIgnore
+    public boolean unknownFields;
+
     @JsonSetter("nsd:id")
     public void setId_1(String id) {
         this.id = id;

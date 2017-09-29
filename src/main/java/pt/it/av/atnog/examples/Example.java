@@ -62,5 +62,11 @@ public class Example {
         System.out.println("Ping VNF: " + pingVnfRequirements.toHTML());
         System.out.println("Pong VNF: " + pongVnfRequirements.toHTML());
         System.out.println("Ping Pong NS: " + pingPongNsRequirements.toHTML());
+
+        System.out.println("Unknown fields:");
+
+        System.out.println("Ping VNF: " + pingVnfRequirements.unknownFields);
+        System.out.println("Pong VNF: " + pongVnfRequirements.unknownFields);
+        System.out.println("Ping Pong NS: " + pingPongNsRequirements.unknownFields);
     }
 }

@@ -1,5 +1,7 @@
 package pt.it.av.atnog.extractors;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -14,7 +16,6 @@ public class VNFExtractor {
     private static int BUFFER_SIZE = 4 * 1024;
 
     private File VNFDescriptorFile;
-    
 
 	private String descriptorYAMLfile;	
 
@@ -46,19 +47,24 @@ public class VNFExtractor {
                     }
 
                     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+                    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                     
                     this.descriptorYAMLfile = new String(file.toByteArray());
-                    VNFTopLevelContainer container = null;
-                    try {
-                    	container = mapper.readValue(file.toByteArray(), VNFTopLevelContainer.class);                   	
-                    	
-                    } catch( Exception e ) {
-            			e.printStackTrace();                    		
-                    }
-                    
+                    VNFTopLevelContainer container = mapper.readValue(file.toByteArray(), VNFTopLevelContainer.class);
 
                 	if (container != null) {
-                		return container.catalog.vnfDescriptors.get(0);
+                	    VNFDescriptor descriptor = container.catalog.vnfDescriptors.get(0);
+
+                	    try {
+                	        mapper = new ObjectMapper(new YAMLFactory());
+                	        mapper.readValue(file.toByteArray(), VNFTopLevelContainer.class);
+                            descriptor.unknownFields = false;
+                        } catch (JsonMappingException ex) {
+                	        ex.printStackTrace();
+                	        descriptor.unknownFields = true;
+                        }
+
+                		return descriptor;
                 	} else {
                 		return null;
                 	}

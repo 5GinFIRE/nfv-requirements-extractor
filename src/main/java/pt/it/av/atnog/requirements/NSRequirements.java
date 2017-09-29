@@ -11,6 +11,7 @@ public class NSRequirements {
     public NSDescriptor nsDescriptor;
     public List<VNFDescriptor> vnfDescriptors;
 
+    public boolean unknownFields = false;
     public int memoryMB = 0;
     public int storageGB = 0;
     public int vcpuCount = 0;
@@ -20,6 +21,7 @@ public class NSRequirements {
         this.nsDescriptor = nsDescriptor;
         this.vnfDescriptors = vnfDescriptors;
 
+        this.unknownFields = this.nsDescriptor.unknownFields;
         this.memoryMB = 0;
         this.storageGB = 0;
         this.vcpuCount = 0;
@@ -30,6 +32,7 @@ public class NSRequirements {
                 if(vnfd.vnfdIdentifierReference.equals(vnf.id)) {
                     VNFRequirements requirements = new VNFRequirements(vnf);
 
+                    this.unknownFields |= requirements.unknownFields;
                     this.memoryMB += requirements.memoryMB;
                     this.storageGB += requirements.storageGB;
                     this.vcpuCount += requirements.vcpuCount;

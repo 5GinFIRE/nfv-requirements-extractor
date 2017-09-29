@@ -8,6 +8,7 @@ import java.util.Formatter;
 public class VNFRequirements {
     public VNFDescriptor descriptor;
 
+    public boolean unknownFields = false;
     public int memoryMB = 0;
     public int storageGB = 0;
     public int vcpuCount = 0;
@@ -16,6 +17,7 @@ public class VNFRequirements {
     public VNFRequirements(VNFDescriptor descriptor) {
         this.descriptor = descriptor;
 
+        this.unknownFields = this.descriptor.unknownFields;
         this.memoryMB = 0;
         this.storageGB = 0;
         this.vcpuCount = 0;

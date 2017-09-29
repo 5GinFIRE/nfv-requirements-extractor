@@ -46,6 +46,9 @@ public class VNFDescriptor {
     @JsonIgnore
     public VNFConfiguration vnfConfiguration;
 
+    @JsonIgnore
+    public boolean unknownFields;
+
     @JsonSetter("vnfd:id")
     public void setId_1(String id) {
         this.id = id;
