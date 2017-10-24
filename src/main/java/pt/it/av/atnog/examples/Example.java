@@ -1,18 +1,17 @@
 package pt.it.av.atnog.examples;
 
-import org.apache.commons.io.FileUtils;
-import pt.it.av.atnog.extractors.NSExtractor;
-import pt.it.av.atnog.extractors.VNFExtractor;
-import pt.it.av.atnog.nsdescriptor.NSDescriptor;
-import pt.it.av.atnog.requirements.NSRequirements;
-import pt.it.av.atnog.requirements.VNFRequirements;
-import pt.it.av.atnog.vnfdescriptor.VNFDescriptor;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+
+import pt.it.av.atnog.extractors.NSExtractor;
+import pt.it.av.atnog.extractors.VNFExtractor;
+import pt.it.av.atnog.requirements.NSRequirements;
+import pt.it.av.atnog.requirements.VNFRequirements;
+import urn.ietf.params.xml.ns.yang.nfvo.nsd.rev141027.nsd.catalog.Nsd;
+import urn.ietf.params.xml.ns.yang.nfvo.vnfd.rev150910.vnfd.catalog.Vnfd;
 
 
 public class Example {
@@ -24,6 +23,7 @@ public class Example {
         pingVnfUrl = new URL("https://osm-download.etsi.org/ftp/examples/ping_pong_ns/ping_vnf.tar.gz");
         pongVnfUrl = new URL("https://osm-download.etsi.org/ftp/examples/ping_pong_ns/pong_vnf.tar.gz");
         pingPongNsUrl = new URL("https://osm-download.etsi.org/ftp/examples/ping_pong_ns/ping_pong_ns.tar.gz");
+        //pingVnfUrl = new URL("http://150.140.184.212:13000/5ginfireportal/services/api/repo/packages/67ce4a0f-8c41-40e9-a2ad-bd2f8a783fe8/lab_vnfd.tar.gz");
 
         File pingVnfFile = File.createTempFile("ping_vnf", ".tar.gz");
         File pongVnfFile = File.createTempFile("pong_vnf", ".tar.gz");
@@ -42,20 +42,20 @@ public class Example {
         System.out.println("Calculating requirements...");
 
         VNFExtractor vnfExtract = new VNFExtractor(pingVnfFile);
-        VNFDescriptor pingVnfDescriptor = vnfExtract.extractDescriptor();
+        Vnfd pingVnfDescriptor = vnfExtract.extractVnfdDescriptor();
         VNFRequirements pingVnfRequirements = new VNFRequirements(pingVnfDescriptor);
 
         vnfExtract = new VNFExtractor(pongVnfFile);
-        VNFDescriptor pongVnfDescriptor = vnfExtract.extractDescriptor();
+        Vnfd pongVnfDescriptor = vnfExtract.extractVnfdDescriptor();
         VNFRequirements pongVnfRequirements = new VNFRequirements(pongVnfDescriptor);
 
-        List<VNFDescriptor> vnfDescriptorList = new ArrayList<>();
-        vnfDescriptorList.add(pingVnfDescriptor);
-        vnfDescriptorList.add(pongVnfDescriptor);
+//        List<VNFDescriptor> vnfDescriptorList = new ArrayList<>();
+//        vnfDescriptorList.add(pingVnfDescriptor);
+//        vnfDescriptorList.add(pongVnfDescriptor);
 
         NSExtractor nsExtractor = new NSExtractor(pingPongNsFile);
-        NSDescriptor pingPongNsDescriptor = nsExtractor.extractDescriptor();
-        NSRequirements pingPongNsRequirements = new NSRequirements(pingPongNsDescriptor, vnfDescriptorList);
+        Nsd pingPongNsDescriptor = nsExtractor.extractNsDescriptor();
+        NSRequirements pingPongNsRequirements = new NSRequirements(pingPongNsDescriptor);
 
         System.out.println("Presenting requirements:");
 
@@ -65,8 +65,14 @@ public class Example {
 
         System.out.println("Unknown fields:");
 
-        System.out.println("Ping VNF: " + pingVnfRequirements.unknownFields);
-        System.out.println("Pong VNF: " + pongVnfRequirements.unknownFields);
-        System.out.println("Ping Pong NS: " + pingPongNsRequirements.unknownFields);
+//        System.out.println("Ping VNF: " + pingVnfRequirements.unknownFields);
+//        System.out.println("Pong VNF: " + pongVnfRequirements.unknownFields);
+//        System.out.println("Ping Pong NS: " + pingPongNsRequirements.unknownFields);
+        
+
+        System.out.println("Vnfd = " + pingVnfDescriptor.toString() );
+        System.out.println("Vnfd = " + pongVnfDescriptor.toString() );
+        System.out.println("Nsd = " + pingPongNsDescriptor.toString() );
+        
     }
 }
