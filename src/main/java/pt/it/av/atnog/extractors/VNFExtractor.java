@@ -29,12 +29,17 @@ public class VNFExtractor {
     private File VNFDescriptorFile;
 
 	private String descriptorYAMLfile;	
+	
+	private ByteArrayOutputStream iconfilePath;	
 
-    public VNFExtractor(File VNFDescriptorFile) {
+
+	public VNFExtractor(File VNFDescriptorFile) {
         this.VNFDescriptorFile = VNFDescriptorFile;
     }
     
     public Vnfd extractVnfdDescriptor() throws IOException {
+    	Vnfd descriptor = null;
+    	 
         try (InputStream in = new FileInputStream(VNFDescriptorFile);
              GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
              TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)){
@@ -46,8 +51,7 @@ public class VNFExtractor {
                     continue;
                 }
 
-                if(entry.getName().indexOf("/", root.getName().length()) == -1 &&
-                        entry.getName().endsWith(".yaml")) {
+                if(entry.getName().indexOf("/", root.getName().length()) == -1 && entry.getName().endsWith(".yaml")) {
                     ByteArrayOutputStream file = new ByteArrayOutputStream();
 
                     int count;
@@ -69,16 +73,24 @@ public class VNFExtractor {
                     tr = tr.get(0);
                     String s = tr.toString();                     
 
-                    Vnfd descriptor = mapper.readValue( s , Vnfd.class);
-           		
-                    return descriptor;
-                	
+                    descriptor = mapper.readValue( s , Vnfd.class);
 
+                }
+                if(entry.getName().indexOf("/icons", root.getName().length()) == -1 && ( entry.getName().endsWith(".png") || entry.getName().endsWith(".jpg")) ) {
+                	
+                	this.iconfilePath = new ByteArrayOutputStream();
+
+                     int count;
+                     byte data[] = new byte[BUFFER_SIZE];
+
+                     while((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+                    	 this.iconfilePath.write(data, 0, count);
+                     }
                 }
             }
         }
 
-        return null;
+        return descriptor;
     }
 
 
@@ -143,4 +155,8 @@ public class VNFExtractor {
 		this.descriptorYAMLfile = descriptorYAMLfile;
 	}
 
+
+    public ByteArrayOutputStream getIconfilePath() {
+		return iconfilePath;
+	}
 }

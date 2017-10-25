@@ -41,12 +41,12 @@ public class Example {
 
         System.out.println("Calculating requirements...");
 
-        VNFExtractor vnfExtract = new VNFExtractor(pingVnfFile);
-        Vnfd pingVnfDescriptor = vnfExtract.extractVnfdDescriptor();
+        VNFExtractor vnfPingExtract = new VNFExtractor(pingVnfFile);
+        Vnfd pingVnfDescriptor = vnfPingExtract.extractVnfdDescriptor();
         VNFRequirements pingVnfRequirements = new VNFRequirements(pingVnfDescriptor);
 
-        vnfExtract = new VNFExtractor(pongVnfFile);
-        Vnfd pongVnfDescriptor = vnfExtract.extractVnfdDescriptor();
+        VNFExtractor vnfPongExtract = new VNFExtractor(pongVnfFile);
+        Vnfd pongVnfDescriptor = vnfPongExtract.extractVnfdDescriptor();
         VNFRequirements pongVnfRequirements = new VNFRequirements(pongVnfDescriptor);
 
 //        List<VNFDescriptor> vnfDescriptorList = new ArrayList<>();
@@ -60,6 +60,7 @@ public class Example {
         System.out.println("Presenting requirements:");
 
         System.out.println("Ping VNF: " + pingVnfRequirements.toHTML());
+        System.out.println("Ping VNF: " + pingVnfRequirements.toHTML());
         System.out.println("Pong VNF: " + pongVnfRequirements.toHTML());
         System.out.println("Ping Pong NS: " + pingPongNsRequirements.toHTML());
 
@@ -71,8 +72,11 @@ public class Example {
         
 
         System.out.println("Vnfd = " + pingVnfDescriptor.toString() );
+        System.out.println("Ping VNF Icon : " + vnfPingExtract.getIconfilePath() );
         System.out.println("Vnfd = " + pongVnfDescriptor.toString() );
+        System.out.println("Pong VNF Icon : " + vnfPongExtract.getIconfilePath() );
         System.out.println("Nsd = " + pingPongNsDescriptor.toString() );
+        System.out.println("Ping Pong Icon : " + nsExtractor.getIconfilePath() );
         
     }
 }
