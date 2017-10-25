@@ -66,7 +66,11 @@ public class NSExtractor {
 
 					this.descriptorYAMLfile = new String(file.toByteArray());
 
-					JsonNode tr = mapper.readTree(this.descriptorYAMLfile).findValue("nsd:nsd").get(0);
+					JsonNode tr = mapper.readTree(this.descriptorYAMLfile).findValue("nsd:nsd");
+					if ( tr == null ) {
+						tr = mapper.readTree(this.descriptorYAMLfile).findValue("nsd"); 
+					}
+					tr = tr.get(0);
 					String s = tr.toString();
 					
 					s = s.replaceAll("nsd:", ""); //some yaml files contain  nsd: prefix in every key which is not common in json

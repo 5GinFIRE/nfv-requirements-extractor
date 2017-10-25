@@ -73,6 +73,8 @@ public class VNFExtractor {
                     tr = tr.get(0);
                     String s = tr.toString();                     
 
+					s = s.replaceAll("vnfd:", ""); //some yaml files contain  nsd: prefix in every key which is not common in json
+					
                     descriptor = mapper.readValue( s , Vnfd.class);
 
                 }
