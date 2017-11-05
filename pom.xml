@@ -21,6 +21,33 @@
             </plugin>
         </plugins>
     </build>
+    
+    <pluginRepositories>
+		<pluginRepository>
+			<id>opendaylight-release</id>
+			<name>opendaylight-release</name>
+			<url>http://nexus.opendaylight.org/content/repositories/opendaylight.release/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>opendaylight-snapshot</id>
+			<name>opendaylight-snapshot</name>
+			<url>http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+
+	<repositories>
+		<repository>
+			<id>opendaylight-release</id>
+			<name>opendaylight-release</name>
+			<url>http://nexus.opendaylight.org/content/repositories/opendaylight.release/</url>
+		</repository>
+		<repository>
+			<id>opendaylight-snapshot</id>
+			<name>opendaylight-snapshot</name>
+			<url>http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
+		</repository>
+	</repositories>
 
     <dependencies>
         <dependency>
