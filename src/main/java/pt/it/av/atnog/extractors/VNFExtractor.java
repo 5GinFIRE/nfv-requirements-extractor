@@ -43,51 +43,62 @@ public class VNFExtractor {
         try (InputStream in = new FileInputStream(VNFDescriptorFile);
              GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
              TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)){
-            TarArchiveEntry entry, root = null;
+            TarArchiveEntry entry = null;
 
             while ((entry = tarIn.getNextTarEntry()) != null) {
-                if(root == null && entry.getName().indexOf("/") == entry.getName().length()-1) {
-                    root = entry;
-                    continue;
+               
+                
+                if (entry.getName().endsWith(".yaml")) {
+
+                        ByteArrayOutputStream file = new ByteArrayOutputStream();
+
+                        int count;
+                        byte data[] = new byte[BUFFER_SIZE];
+
+                        while((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+                            file.write(data, 0, count);
+                        }
+
+                        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+                        
+                        this.descriptorYAMLfile = new String(file.toByteArray());
+                        
+                        JsonNode tr = mapper.readTree( this.descriptorYAMLfile ).findValue("vnfd:vnfd");
+                        if ( tr == null ) {
+                        	tr = mapper.readTree( this.descriptorYAMLfile ).findValue("vnfd");
+                        }
+                        
+                        if ( tr != null ) {                            
+                            tr = tr.get(0);
+                            String s = tr.toString();                     
+
+                            
+            				s = s.replaceAll("rw-vnfd:", ""); //some yaml files contain  rw-vnfd: prefix in every key which is not common in json
+        					s = s.replaceAll("vnfd:", ""); //some yaml files contain  nsd: prefix in every key which is not common in json
+        					try {
+        						descriptor = mapper.readValue( s , Vnfd.class);
+        					}catch (Exception e) {
+        						System.out.println("ERROR: " + entry.getName() + " cannot be read as Vnfd class! " + e.getMessage());
+        						
+    						}                        	
+                        }else {
+    						System.out.println("ERROR: " + entry.getName() + " does not contain vnfd tag! " );
+                        }
+
                 }
 
-                if(entry.getName().indexOf("/", root.getName().length()) == -1 && entry.getName().endsWith(".yaml")) {
-                    ByteArrayOutputStream file = new ByteArrayOutputStream();
+                if  ( entry.getName().endsWith(".png") || entry.getName().endsWith(".jpg")) {
 
-                    int count;
-                    byte data[] = new byte[BUFFER_SIZE];
+                    	
+                    	this.iconfilePath = new ByteArrayOutputStream();
 
-                    while((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
-                        file.write(data, 0, count);
-                    }
+                         int count;
+                         byte data[] = new byte[BUFFER_SIZE];
 
-                    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-                    //mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                    
-                    this.descriptorYAMLfile = new String(file.toByteArray());
-                    
-                    JsonNode tr = mapper.readTree( this.descriptorYAMLfile ).findValue("vnfd:vnfd");
-                    if ( tr == null ) {
-                    	tr = mapper.readTree( this.descriptorYAMLfile ).findValue("vnfd");
-                    }
-                    tr = tr.get(0);
-                    String s = tr.toString();                     
-
-					s = s.replaceAll("vnfd:", ""); //some yaml files contain  nsd: prefix in every key which is not common in json
-					
-                    descriptor = mapper.readValue( s , Vnfd.class);
-
-                }
-                if(entry.getName().indexOf("/icons", root.getName().length()) == -1 && ( entry.getName().endsWith(".png") || entry.getName().endsWith(".jpg")) ) {
+                         while((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+                        	 this.iconfilePath.write(data, 0, count);
+                         }
                 	
-                	this.iconfilePath = new ByteArrayOutputStream();
-
-                     int count;
-                     byte data[] = new byte[BUFFER_SIZE];
-
-                     while((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
-                    	 this.iconfilePath.write(data, 0, count);
-                     }
                 }
             }
         }

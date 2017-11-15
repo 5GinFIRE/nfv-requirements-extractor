@@ -44,15 +44,12 @@ public class NSExtractor {
 		try (InputStream in = new FileInputStream(NSDescriptorFile);
 				GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);
 				TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
-			TarArchiveEntry entry, root = null;
+			TarArchiveEntry entry = null;
 
 			while ((entry = tarIn.getNextTarEntry()) != null) {
-				if (root == null && entry.getName().indexOf("/") == entry.getName().length() - 1) {
-					root = entry;
-					continue;
-				}
+	
 
-				if (entry.getName().indexOf("/", root.getName().length()) == -1 && entry.getName().endsWith(".yaml")) {
+                if (entry.getName().endsWith(".yaml")) {
 					ByteArrayOutputStream file = new ByteArrayOutputStream();
 
 					int count;
@@ -70,20 +67,32 @@ public class NSExtractor {
 					if ( tr == null ) {
 						tr = mapper.readTree(this.descriptorYAMLfile).findValue("nsd"); 
 					}
-					tr = tr.get(0);
-					String s = tr.toString();
-					
-					s = s.replaceAll("nsd:", ""); //some yaml files contain  nsd: prefix in every key which is not common in json
-					
-					
-					descriptor = mapper.readValue( s , Nsd.class);
+
+                    if ( tr != null ) {  
+    					tr = tr.get(0);
+    					String s = tr.toString();
+    					
+    					s = s.replaceAll("rw-nsd:", ""); //some yaml files contain  rw-nsd: prefix in every key which is not common in json    					
+    					s = s.replaceAll("nsd:", ""); //some yaml files contain  nsd: prefix in every key which is not common in json
+    					
+    					try {
+    					descriptor = mapper.readValue( s , Nsd.class);
+    					}catch (Exception e) {
+    						System.out.println("ERROR: " + entry.getName() + " cannot be read as Nsd class! " + e.getMessage());
+    						
+						}                        	
+    					
+                    	
+                    }else {
+						System.out.println("ERROR: " + entry.getName() + " does not contain nsd tag! " );
+                    }
 
 
 				}
 				
 
-                if(entry.getName().indexOf("/icons", root.getName().length()) == -1 && ( entry.getName().endsWith(".png") || entry.getName().endsWith(".jpg")) ) {
-                	
+
+                if  ( entry.getName().endsWith(".png") || entry.getName().endsWith(".jpg")) {    	
                 	
                 	this.iconfilePath = new ByteArrayOutputStream();
 
