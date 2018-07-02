@@ -63,10 +63,16 @@ public class VNFExtractor {
                         
                         this.descriptorYAMLfile = new String(file.toByteArray());
                         
-                        JsonNode tr = mapper.readTree( this.descriptorYAMLfile ).findValue("vnfd:vnfd");
-                        if ( tr == null ) {
-                        	tr = mapper.readTree( this.descriptorYAMLfile ).findValue("vnfd");
-                        }
+                        JsonNode tr = null;
+                        
+                        if ( !this.descriptorYAMLfile.equals("") ) {
+                        	tr = mapper.readTree( this.descriptorYAMLfile ).findValue("vnfd:vnfd");   
+                        	if ( tr == null ) {
+                            	tr = mapper.readTree( this.descriptorYAMLfile ).findValue("vnfd");
+                            }
+                        }                        
+                        
+                       
                         
                         if ( tr != null ) {                            
                             tr = tr.get(0);
