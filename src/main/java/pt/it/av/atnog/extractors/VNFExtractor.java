@@ -50,6 +50,7 @@ public class VNFExtractor {
                 
                 if (entry.getName().endsWith(".yaml")) {
 
+						System.out.println("INFO: Examining " + entry.getName() + " for vnfd tag..." );
                         ByteArrayOutputStream file = new ByteArrayOutputStream();
 
                         int count;
