@@ -86,12 +86,11 @@ public class VNFExtractor {
                             
             				s = s.replaceAll("rw-vnfd:", ""); //some yaml files contain  rw-vnfd: prefix in every key which is not common in json
         					s = s.replaceAll("vnfd:", ""); //some yaml files contain  nsd: prefix in every key which is not common in json
-        					try {
+        					//try {
         						descriptor = mapper.readValue( s , Vnfd.class);
-        					}catch (Exception e) {
-        						System.out.println("ERROR: " + entry.getName() + " cannot be read as Vnfd class! " + e.getMessage());
-        						
-    						}                        	
+        					//}catch (Exception e) {
+        					//	System.out.println("ERROR: " + entry.getName() + " cannot be read as Vnfd class! " + e.getMessage());        						
+    						//}                        	
                         }else {
     						System.out.println("ERROR: " + entry.getName() + " does not contain vnfd tag! " );
                         }
