@@ -63,24 +63,33 @@ public class NSExtractor {
 
 					this.descriptorYAMLfile = new String(file.toByteArray());
 
-					JsonNode tr = mapper.readTree(this.descriptorYAMLfile).findValue("nsd:nsd");
-					if ( tr == null ) {
-						tr = mapper.readTree(this.descriptorYAMLfile).findValue("nsd"); 
-					}
 
-                    if ( tr != null ) {  
-    					tr = tr.get(0);
+                    JsonNode tr = null;
+					if ( !this.descriptorYAMLfile.equals("") ) {
+						tr = mapper.readTree(this.descriptorYAMLfile).findValue("nsd:nsd");
+                    	if ( tr == null ) {
+    						tr = mapper.readTree(this.descriptorYAMLfile).findValue("nsd"); 
+                        }
+                    }                        
+					
+					
+
+                    if ( tr != null ) 
+                    {
+                    	if (tr.get(0) != null){ 
+                    		tr = tr.get(0);
+                    	}
     					String s = tr.toString();
     					
     					s = s.replaceAll("rw-nsd:", ""); //some yaml files contain  rw-nsd: prefix in every key which is not common in json    					
     					s = s.replaceAll("nsd:", ""); //some yaml files contain  nsd: prefix in every key which is not common in json
     					
-    					try {
+//    					try {
     					descriptor = mapper.readValue( s , Nsd.class);
-    					}catch (Exception e) {
-    						System.out.println("ERROR: " + entry.getName() + " cannot be read as Nsd class! " + e.getMessage());
-    						
-						}                        	
+//    					}catch (Exception e) {
+//    						System.out.println("ERROR: " + entry.getName() + " cannot be read as Nsd class! " + e.getMessage());
+//    						
+//						}                        	
     					
                     	
                     }else {

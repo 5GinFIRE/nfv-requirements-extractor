@@ -75,8 +75,12 @@ public class VNFExtractor {
                         
                        
                         
-                        if ( tr != null ) {                            
-                            tr = tr.get(0);
+                        if ( tr != null ) {      
+                        	
+                        	if (tr.get(0) != null){ 
+                        		tr = tr.get(0);
+                        	}
+                        	
                             String s = tr.toString();                     
 
                             
