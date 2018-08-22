@@ -33,18 +33,23 @@ public class NSRequirements {
         fmt.format("<b>%s: </b>%s<br>", "Vendor", nsDescriptor.getVendor());
         fmt.format("<b>%s: </b>%s<br>", "Version", nsDescriptor.getVersion());
         fmt.format("<b>%s: </b>%s<br>", "Description", nsDescriptor.getDescription());
-        fmt.format("<b>%s: </b>%d<br>", "VNF Count", nsDescriptor.getConstituentVnfd().size());
+        if ( nsDescriptor.getConstituentVnfd() != null ) {
+        	fmt.format("<b>%s: </b>%d<br>", "VNF Count", nsDescriptor.getConstituentVnfd().size());
+        }
+        
         fmt.format("<b>%s: </b>%d<br>", "VM Count", vmCount);
         fmt.format("<b>%s: </b>%d<br>", "vCPU Count", vcpuCount);
         fmt.format("<b>%s: </b>%d MB<br>", "Memory", memoryMB);
         fmt.format("<b>%s: </b>%d GB<br>", "Storage", storageGB);
 
         fmt.format("<h2>%s</h2><br>", "ConstituentVnfds" );
-        List<ConstituentVnfd> vl = nsDescriptor.getConstituentVnfd();
-        for (ConstituentVnfd constituentVnfd : vl) {
-            fmt.format("<b>%s: </b>%s<br>", "VnfdId", constituentVnfd.getVnfdIdRef() );
-        	
-		}
+        if ( nsDescriptor.getConstituentVnfd() != null ) {
+            List<ConstituentVnfd> vl = nsDescriptor.getConstituentVnfd();
+            for (ConstituentVnfd constituentVnfd : vl) {
+                fmt.format("<b>%s: </b>%s<br>", "VnfdId", constituentVnfd.getVnfdIdRef() );
+            	
+    		}        	
+        }
         
         
         return stringBuilder.toString();
